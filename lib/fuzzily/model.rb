@@ -58,7 +58,7 @@ module Fuzzily
             select('owner_id, owner_type, count(*) AS matches, MAX(score) AS score').
             group('owner_id, owner_type').
             # (number of matches / number of trigrams for search text) / (1 + abs(score - score of search text))
-            having("(matches / score) > 0.4").
+            having("(matches / score) >= 0.4").
             order('matches DESC, score ASC').
             with_trigram(scored_trigrams.map{|t| t[0] })
         end
