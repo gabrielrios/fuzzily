@@ -49,14 +49,14 @@ module Fuzzily
           for_model(self.name).
           for_field(_o.field.to_s).
           matches_for(pattern)
-        binding.pry
         # trigrams.normalized_score_greater_than(0.9) if options[:limit_score]
         records = _load_for_ids(trigrams.map(&:owner_id))
         # order records as per trigram query (no portable way to do this in SQL)
         trigrams.map do |t|
           r = records[t.owner_id]
           r.score = t.score
-          r.matches = r.matches
+          r.matches = t.matches
+          r.search_quality = r.matches.to_f / r.score.to_f
           r
         end.select { |r| r != nil }
       end
